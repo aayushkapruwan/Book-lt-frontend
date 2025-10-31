@@ -4,6 +4,7 @@ import { useBookingStore } from "@/store/useBookingStore";
 import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Loading from "../loading";
 export default function CheckoutPage() {
   const {
     date,
@@ -27,9 +28,11 @@ export default function CheckoutPage() {
   const router = useRouter()
   const [Discount, setDiscount] = useState()
   const [isChecked, setIsChecked] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleBooking = async () => {
     console.log("hi");
+    setLoading(true);
 
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API}/api/bookings/create`, { fullname: fullName, email, experience: experienceId, date, time, qty: quantity, subtotal, taxes: tax, total })
@@ -41,9 +44,12 @@ export default function CheckoutPage() {
       }
     } catch (error) {
       alert("booking cancelled")
+    } finally {
+      setLoading(false);
     }
   }
   const handleApplyPromo = async () => {
+    setLoading(true);
     try {
       const data = {
         code: promoCode,
@@ -64,8 +70,16 @@ export default function CheckoutPage() {
     } catch (error) {
       console.error("Error applying promo code:", error);
       alert("Invalid promo code or error occurred.");
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <Loading/>
+    );
+  }
 
   return (
     <div className="flex flex-col lg:flex-row pt-20 w-full max-w-6xl mx-auto justify-between gap-6 px-4">

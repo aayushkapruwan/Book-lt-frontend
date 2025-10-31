@@ -6,6 +6,7 @@ import { useBookingStore } from "@/store/useBookingStore";
 import { useRouter } from "next/navigation";
 import Dates from "@/components/Date";
 import Times from "@/components/Times";
+import Loading from "@/app/loading";
 export interface TimeSlot {
   _id?: string;
   time: string;
@@ -40,6 +41,7 @@ export default function ExperienceDetails() {
   const [taxAmount, setTaxAmount] = useState<number>()
   const [subtotal, setSubtotal] = useState<number>()
   const [experience, setExperience] = useState<ExperienceDetails | null>(null);
+  const [loading, setLoading] = useState(true);
   const [date, setDate] = useState<string>("");
   const [timeSlot, setTimeSlot] = useState<TimeSlot | null>(null);
   const [time, setTime] = useState<string | undefined>("")
@@ -57,6 +59,8 @@ export default function ExperienceDetails() {
       setExperienceId(data.data._id)
     } catch (error) {
       alert(error);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
@@ -86,6 +90,13 @@ export default function ExperienceDetails() {
   const router = useRouter();
   const { setAll, reset, setExperienceId
   } = useBookingStore()
+
+  if (loading) {
+    return (
+      <Loading />
+    );
+  }
+
   return (
     <div className="flex flex-col lg:flex-row pt-20 w-full max-w-6xl mx-auto justify-between gap-6 px-4">
       {/* left part */}
@@ -193,6 +204,7 @@ export default function ExperienceDetails() {
           disabled={date && time ? false : true}
           type="submit"
           onClick={() => {
+            setLoading(true)
             setAll({
               date,
               time,

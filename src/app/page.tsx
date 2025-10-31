@@ -2,6 +2,7 @@
 import Card from "@/components/Card";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import Loading from "./loading";
 
 interface Experience {
   _id: string;
@@ -14,19 +15,28 @@ interface Experience {
 
 export default function Home() {
   const [exp, setExp] = useState<Experience[]>([]);
+  const [loading, setLoading] = useState(true);
   const fetchExperiences = async () => {
     try {
       const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/api/experiences/`);
       setExp(data.data);
       console.log();
-      
+
     } catch (error) {
       console.error("Error fetching experiences:", error);
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
     fetchExperiences();
   }, []);
+
+  if (loading) {
+    return (
+<Loading/>
+    );
+  }
 
   return (
     <div className="pt-30 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center mx-10">
