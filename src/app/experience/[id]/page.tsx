@@ -51,7 +51,7 @@ export default function ExperienceDetails() {
   const getExperienceDetails = async () => {
     try {
       const { data } = await axios.get(
-        `http://localhost:4000/api/experiences/${id}`
+        `${process.env.NEXT_PUBLIC_BACKEND_API}/api/experiences/${id}`
       );
       setExperience(data.data);
       setExperienceId(data.data._id)

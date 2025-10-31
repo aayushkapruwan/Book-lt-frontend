@@ -32,7 +32,7 @@ export default function CheckoutPage() {
     console.log("hi");
 
     try {
-      const res = await axios.post("http://localhost:4000/api/bookings/create", { fullname: fullName, email, experience: experienceId, date, time, qty: quantity, subtotal, taxes: tax, total })
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API}/api/bookings/create`, { fullname: fullName, email, experience: experienceId, date, time, qty: quantity, subtotal, taxes: tax, total })
       console.log(res.data.data);
       if (res.data) {
         const refId = res.data.data.refId;
@@ -49,7 +49,7 @@ export default function CheckoutPage() {
         code: promoCode,
         total
       };
-      const response = await axios.post("http://localhost:4000/api/promos/validate", data);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API}/api/promos/validate`, data);
       console.log(response.data);
 
       if (response.data.data.valid) {

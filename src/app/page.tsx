@@ -16,7 +16,7 @@ export default function Home() {
   const [exp, setExp] = useState<Experience[]>([]);
   const fetchExperiences = async () => {
     try {
-      const { data } = await axios.get("http://localhost:4000/api/experiences/");
+      const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_API}/api/experiences/`);
       setExp(data.data);
       console.log();
       
